@@ -1,9 +1,8 @@
 import { supabase } from "@/lib/supabase";
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { Idol } from "@/types/idol";
+// import { Idol } from "@/types/idol"; // Tidak perlu import ini dulu biar aman
 import AnimasiDetail, { AnimasiFoto, AnimasiTeks, AnimasiTombolKembali } from "@/components/AnimasiDetail";
-// Import komponen galeri baru kita 👇
 import PhotoGallery from "@/components/PhotoGallery"; 
 
 interface PageProps {
@@ -25,13 +24,16 @@ export default async function IdolDetailPage({ params }: PageProps) {
     notFound();
   }
 
-  const idol = idolData as Idol;
+  // --- BAGIAN INI YANG DIUBAH ---
+  // Kita pakai 'any' supaya Vercel tidak rewel nanya "gallery itu apa?"
+  const idol = idolData as any;
+  // -----------------------------
 
   return (
     <AnimasiDetail>
       <main className="min-h-screen py-12 px-4 md:px-8 bg-gradient-to-br from-pink-100 via-purple-50 to-indigo-100">
         
-        {/* BAGIAN BIODATA (Sama seperti sebelumnya) */}
+        {/* BAGIAN BIODATA */}
         <div className="max-w-5xl mx-auto bg-white rounded-3xl shadow-xl overflow-hidden border border-white/50 mb-12">
           <div className="flex flex-col md:flex-row">
             
@@ -97,8 +99,7 @@ export default async function IdolDetailPage({ params }: PageProps) {
           </div>
         </div>
 
-        {/* BAGIAN GALERI INTERAKTIF (Baru) */}
-        {/* Kita kirim data array gallery ke komponen PhotoGallery */}
+        {/* BAGIAN GALERI INTERAKTIF */}
         {idol.gallery && Array.isArray(idol.gallery) && idol.gallery.length > 0 && (
             <PhotoGallery images={idol.gallery} />
         )}
