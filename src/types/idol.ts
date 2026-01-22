@@ -12,4 +12,5 @@ export interface Idol {
     blood_type?: string;
     mbti?: string;
     description?: string;
+    likes?: number;
   }
