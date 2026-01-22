@@ -13,6 +13,6 @@ export interface Idol {
   mbti?: string;
   zodiac?: string;
   description?: string;
-  gallery?: string[];
-  likes?: number;    
+  gallery?: string[]; // 👈 INI KUNCINYA! Harus ada tanda tanya (?) dan string[]
+  likes?: number;     // 👈 Ini juga penting
 }
