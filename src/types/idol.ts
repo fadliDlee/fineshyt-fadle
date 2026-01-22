@@ -13,6 +13,6 @@ export interface Idol {
   mbti?: string;
   zodiac?: string;
   description?: string;
-  gallery?: string[]; // 👈 PASTIKAN INI ADA!
-  likes?: number;     // 👈 PASTIKAN INI JUGA ADA (buat fitur love)
+  gallery?: string[];
+  likes?: number;    
 }
