@@ -1,10 +1,10 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-    // 1. Abaikan error TypeScript (ini yang bikin error gallery tadi)
+    // Abaikan error TypeScript (seperti gallery not exist)
     typescript: {
       ignoreBuildErrors: true,
     },
-    // 2. Abaikan error ESLint
+    // Abaikan error ESLint (seperti any type)
     eslint: {
       ignoreDuringBuilds: true,
     },
