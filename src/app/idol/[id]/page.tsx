@@ -1,7 +1,7 @@
 import { supabase } from "@/lib/supabase";
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import Image from "next/image";
+// import Image from "next/image"; // 👈 Kita matikan ini biar gak ribet config domain
 import AnimasiDetail, { AnimasiFoto, AnimasiTeks, AnimasiTombolKembali } from "@/components/AnimasiDetail";
 import PhotoGallery from "@/components/PhotoGallery"; 
 
@@ -9,9 +9,7 @@ interface PageProps {
   params: Promise<{ id: string }>;
 }
 
-// --- JURUS TIPE LOKAL ---
-// Kita buat definisi tipe data LANGSUNG di sini.
-// Ini 100% aman dari error "gallery not exist" dan error "unexpected any".
+// --- JURUS TIPE LOKAL (SOLUSI ANTI ERROR) ---
 type IdolDetailType = {
   id: number;
   name: string;
@@ -26,8 +24,8 @@ type IdolDetailType = {
   mbti?: string;
   zodiac?: string;
   description?: string;
-  gallery?: string[]; // ✅ Kita definisikan manual di sini
-  likes?: number;     // ✅ Ini juga
+  gallery?: string[]; 
+  likes?: number;     
 };
 
 export const revalidate = 0; 
@@ -45,7 +43,7 @@ export default async function IdolDetailPage({ params }: PageProps) {
     notFound();
   }
 
-  // Gunakan tipe lokal yang baru kita buat di atas
+  // Gunakan tipe lokal supaya Vercel senang
   const idol = idolData as IdolDetailType;
 
   return (
@@ -59,7 +57,8 @@ export default async function IdolDetailPage({ params }: PageProps) {
             {/* Foto Profil */}
             <div className="w-full md:w-1/3 h-[500px] bg-rose-50 relative overflow-hidden">
                <AnimasiFoto>
-                 <Image 
+                 {/* PENTING: Pakai img biasa biar pasti muncul tanpa setting config */}
+                 <img 
                    src={idol.image_url} 
                    alt={idol.name}
                    className="w-full h-full object-cover object-top"
@@ -128,7 +127,7 @@ export default async function IdolDetailPage({ params }: PageProps) {
   );
 }
 
-// Komponen Kecil
+// Komponen Kecil (Sama seperti sebelumnya)
 function BiodataItem({ label, value }: { label: string, value?: string }) {
   if (!value) return null;
   return (
