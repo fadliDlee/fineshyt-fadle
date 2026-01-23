@@ -1,7 +1,6 @@
 import { supabase } from "@/lib/supabase";
 import { notFound } from "next/navigation";
 import Link from "next/link";
-// import Image from "next/image"; // 👈 Kita matikan ini biar gak ribet config domain
 import AnimasiDetail, { AnimasiFoto, AnimasiTeks, AnimasiTombolKembali } from "@/components/AnimasiDetail";
 import PhotoGallery from "@/components/PhotoGallery"; 
 
@@ -9,7 +8,7 @@ interface PageProps {
   params: Promise<{ id: string }>;
 }
 
-// --- JURUS TIPE LOKAL (SOLUSI ANTI ERROR) ---
+// --- JURUS TIPE LOKAL ---
 type IdolDetailType = {
   id: number;
   name: string;
@@ -28,7 +27,10 @@ type IdolDetailType = {
   likes?: number;     
 };
 
-export const revalidate = 0; 
+// 👇 INI PERUBAHAN PENTINGNYA!
+// Baris ini menyuruh Vercel: "Jangan render saat build, render saat dibuka user saja."
+export const dynamic = "force-dynamic"; 
+// 👆 Hapus 'export const revalidate = 0;' jika ada, ganti dengan yang di atas.
 
 export default async function IdolDetailPage({ params }: PageProps) {
   const { id } = await params;
@@ -43,7 +45,6 @@ export default async function IdolDetailPage({ params }: PageProps) {
     notFound();
   }
 
-  // Gunakan tipe lokal supaya Vercel senang
   const idol = idolData as IdolDetailType;
 
   return (
@@ -57,7 +58,6 @@ export default async function IdolDetailPage({ params }: PageProps) {
             {/* Foto Profil */}
             <div className="w-full md:w-1/3 h-[500px] bg-rose-50 relative overflow-hidden">
                <AnimasiFoto>
-                 {/* PENTING: Pakai img biasa biar pasti muncul tanpa setting config */}
                  <img 
                    src={idol.image_url} 
                    alt={idol.name}
@@ -117,7 +117,7 @@ export default async function IdolDetailPage({ params }: PageProps) {
           </div>
         </div>
 
-        {/* BAGIAN GALERI INTERAKTIF */}
+        {/* BAGIAN GALERI */}
         {idol.gallery && Array.isArray(idol.gallery) && idol.gallery.length > 0 && (
             <PhotoGallery images={idol.gallery} />
         )}
@@ -127,7 +127,7 @@ export default async function IdolDetailPage({ params }: PageProps) {
   );
 }
 
-// Komponen Kecil (Sama seperti sebelumnya)
+// Komponen Kecil
 function BiodataItem({ label, value }: { label: string, value?: string }) {
   if (!value) return null;
   return (
