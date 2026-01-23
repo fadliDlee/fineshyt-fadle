@@ -1,13 +1,34 @@
 import { supabase } from "@/lib/supabase";
 import { notFound } from "next/navigation";
 import Link from "next/link";
-// import { Idol } from "@/types/idol"; // Tidak perlu import ini dulu biar aman
+import Image from "next/image";
 import AnimasiDetail, { AnimasiFoto, AnimasiTeks, AnimasiTombolKembali } from "@/components/AnimasiDetail";
 import PhotoGallery from "@/components/PhotoGallery"; 
 
 interface PageProps {
   params: Promise<{ id: string }>;
 }
+
+// --- JURUS TIPE LOKAL ---
+// Kita buat definisi tipe data LANGSUNG di sini.
+// Ini 100% aman dari error "gallery not exist" dan error "unexpected any".
+type IdolDetailType = {
+  id: number;
+  name: string;
+  group_name: string;
+  image_url: string;
+  full_name?: string;
+  birth_date?: string;
+  birth_place?: string;
+  nationality?: string;
+  height?: string;
+  blood_type?: string;
+  mbti?: string;
+  zodiac?: string;
+  description?: string;
+  gallery?: string[]; // ✅ Kita definisikan manual di sini
+  likes?: number;     // ✅ Ini juga
+};
 
 export const revalidate = 0; 
 
@@ -24,10 +45,8 @@ export default async function IdolDetailPage({ params }: PageProps) {
     notFound();
   }
 
-  // --- BAGIAN INI YANG DIUBAH ---
-  // Kita pakai 'any' supaya Vercel tidak rewel nanya "gallery itu apa?"
-  const idol = idolData as any;
-  // -----------------------------
+  // Gunakan tipe lokal yang baru kita buat di atas
+  const idol = idolData as IdolDetailType;
 
   return (
     <AnimasiDetail>
@@ -40,7 +59,7 @@ export default async function IdolDetailPage({ params }: PageProps) {
             {/* Foto Profil */}
             <div className="w-full md:w-1/3 h-[500px] bg-rose-50 relative overflow-hidden">
                <AnimasiFoto>
-                 <img 
+                 <Image 
                    src={idol.image_url} 
                    alt={idol.name}
                    className="w-full h-full object-cover object-top"
